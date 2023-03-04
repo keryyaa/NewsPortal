@@ -1,10 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'flatpages/default.html' %}
 
-</body>
-</html>
+{% block content%}
+    <article class="article">
+
+        <h3 class="article__title" >
+            {{ PostDetail.title }}
+        </h3>
+
+        <div class="article__content" >
+            {{ PostDetail.text }}
+        </div>
+    </article>
+    <hr>
+    <div class="article__author author-article" align="right">
+        <time class="article__datetime">{{ PostDetail.date_in }}</time>
+        <p><a class="author-article__link" href="#">{{ PostDetail.author }}</a></p>
+    </div>
+{% endblock content%}

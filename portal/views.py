@@ -6,12 +6,13 @@ class PostList(ListView):
     model = Post
     template_name = 'portal/PostList.html'
     context_object_name = 'PostList'
-    paginate_by = 10
+    ordering = '-date_in'
+    paginate_by = 1
 
 
 class PostDetail(DetailView):
     model = Post
-    template_name = 'portal/DetailPost.html'
+    template_name = 'portal/PostDetail.html'
     context_object_name = 'PostDetail'
 
 
