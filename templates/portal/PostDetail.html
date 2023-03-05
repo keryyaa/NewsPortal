@@ -15,5 +15,7 @@
     <div class="article__author author-article" align="right">
         <time class="article__datetime">{{ PostDetail.date_in }}</time>
         <p><a class="author-article__link" href="#">{{ PostDetail.author }}</a></p>
+        <p><a href="{% url 'PostUpdate' pk=PostDetail.pk %}">Редактировать</a></p>
+        <p><a href="{% url 'PostDelete' pk=PostDetail.pk %}">Удалить</a></p>
     </div>
 {% endblock content%}

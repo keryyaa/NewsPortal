@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'flatpages/default.html' %}
 
-</body>
-</html>
+{% block content %}
+    <form method="get">
+        {{ filter_list.form.as_p }}
+        <input type="submit">
+    </form>
+    <hr>
+    {% for x in filter_list.qs %}
+        {{ x }}
+    {% endfor %}
+{% endblock content %}
