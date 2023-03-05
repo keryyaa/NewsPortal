@@ -28,11 +28,17 @@
                            </a>
                        </li>
                        <li class="nav-item">
-                           <a class="nav-link" href="/about/">About</a>
-                       </li>
-                       <li class="nav-item">
                            <a class="nav-link" href="{% url 'PostListSearch' %}">Поиск</a>
                        </li>
+                       {% if not request.user.is_authenticated %}
+                       <li class="nav-item">
+                           <a class="nav-link" href="/accounts/login/">Войти</a>
+                       </li>
+                       {% else %}
+                       <li class="nav-item">
+                           <a class="nav-link" href="/accounts/logout/">Выйти</a>
+                       </li>
+                       {% endif %}
                    </ul>
                </div>
            </div>
