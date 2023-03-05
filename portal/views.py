@@ -1,6 +1,6 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .models import Post
 from .filters import PostListSearch
 from django.shortcuts import render
@@ -21,24 +21,30 @@ class PostDetail(DetailView):
     context_object_name = 'PostDetail'
 
 
-class PostCreate(CreateView):
+class PostCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
     template_name = 'portal/PostCreate.html'
     context_object_name = 'PostCreate'
+    raise_exception = True
+    permission_required = ('portal.add_post',)
 
 
-class PostUpdate(UpdateView):
+class PostUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Post
     form_class = PostForm
     template_name = 'portal/PostCreate.html'
     context_object_name = 'PostCreate'
+    raise_exception = True
+    permission_required = ('portal.change_post',)
 
 
-class PostDelete(DeleteView):
+class PostDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Post
     template_name = 'portal/PostDelete.html'
     success_url = reverse_lazy('PostList')
+    raise_exception = True
+    permission_required = ('portal.delete_post',)
 
 
 # Наш фильтр на страницу search/
