@@ -5,47 +5,55 @@
 {% block content%}
 <h2 align="center">Все новости</h2>
 <h6 align="left">Количество всех новостей {{ PostList|length}}</h6>
-<p align="right"><a href="{% url 'PostCreate' %}">Написать статью</a></p>
+{% if perms.portal.add_post %}
+    <p align="right"><a href="{% url 'PostCreate' %}">Написать статью</a></p>
+{% endif %}
 <hr>
 
 {% for post in PostList %}
-    <article class="article">
+<article class="article">
 
-        <h3 class="article__title" align="left">
-            <a href="{% url 'PostDetail' pk=post.pk %}">{{ post.title|censor }}</a>
-        </h3>
+    <h3 class="article__title" align="left">
+        <a href="{% url 'PostDetail' pk=post.pk %}">{{ post.title|censor }}</a>
+    </h3>
+    <div align="left" class="category_post_list">
+        <p align="left">категории:
+            {% for category in post.category.all %}
+                <a href="{% url 'CategoryPostList' pk=category.pk%}">{{ category }}</a>
+            {% endfor %}
+        </p>
+    </div>
+    <div class="article__author author-article" align="right">
+        <time class="article__datetime">{{ post.date_in|date:'M d Y' }}</time>
+        <p><a class="author-article__link" href="#">{{ post.author }}</a></p>
+    </div>
 
-        <div class="article__author author-article" align="right" >
-            <time class="article__datetime" >{{ post.date_in|date:'M d Y' }}</time>
-            <p><a class="author-article__link" href="#">{{ post.author }}</a></p>
-        </div>
-
-        <div class="article__content" align="left">
-            {{ post.text|censor|truncatechars:20 }}
-        </div>
-    </article>
-    <hr>
+    <div class="article__content" align="left">
+        {{ post.text|censor|truncatechars:20 }}
+    </div>
+</article>
+<hr>
 {% endfor %}
-   {# Добавляем пагинацию на страницу #}
+{# Добавляем пагинацию на страницу #}
 
-   {# Информация о предыдущих страницах #}
-   {% if page_obj.has_previous %}
-       <a href="?{% url_replace page=1 %}">1</a>
-       {% if page_obj.previous_page_number != 1 %}
-           ...
-           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
-       {% endif %}
-   {% endif %}
+{# Информация о предыдущих страницах #}
+{% if page_obj.has_previous %}
+<a href="?{% url_replace page=1 %}">1</a>
+{% if page_obj.previous_page_number != 1 %}
+...
+<a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+{% endif %}
+{% endif %}
 
-   {# Информация о текущей странице #}
-   {{ page_obj.number }}
+{# Информация о текущей странице #}
+{{ page_obj.number }}
 
-   {# Информация о следующих страницах #}
-   {% if page_obj.has_next %}
-       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
-       {% if paginator.num_pages != page_obj.next_page_number %}
-           ...
-           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
-       {% endif %}
-   {% endif %}
+{# Информация о следующих страницах #}
+{% if page_obj.has_next %}
+<a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+{% if paginator.num_pages != page_obj.next_page_number %}
+...
+<a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+{% endif %}
+{% endif %}
 {% endblock content%}

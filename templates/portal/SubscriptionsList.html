@@ -1,0 +1,26 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<p align="left"> Категории:</p>
+<hr>
+
+{% for category in SubscriptionsList %}
+    <div align="left">
+        <table width="300">
+            <tr>
+                <td>
+                <a href="{% url 'CategoryPostList' pk=category.id %}">{{ category.name }}</a>
+                </td>
+                <td align="center">
+                    {% if request.user not in category.subscribe.all %}
+                        <a href="{% url 'subscribe_user' pk=category.pk %}" class="btn btn-secondary btn-sm">Подписаться</a>
+                    {% else %}
+                        <a href="{% url 'is_not_subscribe' pk=category.pk %}" class="btn btn-secondary btn-sm" >Отписаться</a>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    </div>
+    <hr>
+{% endfor %}
+{% endblock content %}

@@ -26,6 +26,7 @@ class Author(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=256, unique=True)
+    subscribe = models.ManyToManyField(User, through='Subscriber', blank=True)
 
     def __str__(self):
         return f'{self.name}'
@@ -58,6 +59,10 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('PostList')
 
+    def preview(self):
+        return f'{self.text[:50]}...'
+
+
 class PostCategory(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -84,3 +89,7 @@ class Comment(models.Model):
     def __str__(self):
         return f'{self.text}'
 
+
+class Subscriber(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)

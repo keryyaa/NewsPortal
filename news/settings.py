@@ -44,9 +44,11 @@ INSTALLED_APPS = [
     # Приложение плоских страниц
     'django.contrib.flatpages',
     # Подключаем наше приложение portal
-    'portal',
+    'portal.apps.PortalConfig',
     # Наше приложение расширили функционал для статических страниц добавили что функцию (только для зарегистрированных)
     'fpages',
+    # Наше приложение где мы чуть меняем работу allauth
+    'accounts',
     # Подключаем фильтр для фильтрации новостей
     'django_filters',
     # Подключаем allauth
@@ -55,6 +57,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     # Подключаем провайдера яндекса
     'allauth.socialaccount.providers.yandex',
+    # Ставим для еженедельной рассылки
+    'django_apscheduler',
 
 ]
 # Прописываем константу просто из-за того что многие приложения требуют ее наличие
@@ -158,10 +162,31 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Настройки allauth
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 # Указываем константы для перенаправления после авторизации и выхода из аккаунта
 LOGIN_REDIRECT_URL = '/news/'
 LOGOUT_REDIRECT_URL = '/news/'
+
+# Добавляем для отправки писем
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Настройки для отправки писем
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
+
+# Это мы добавили для удобства там где требуется такая переменная мы ее дергаем из settings что бы не писать каждый раз
+SITE_URL = 'http://127.0.0.1:8000'
+
+# Настройки приложения django_apscheduler
+# Отвечает за формат временной когда это делать
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+# Количество секунд за которое должна выполниться
+APSCHEDULER_RUN_NOW_TIMEOUT = 25
