@@ -1,10 +1,11 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from .models import Post, Category
+from .models import Post, Category, Author
 from .filters import PostListSearch
 from django.shortcuts import render, get_object_or_404
 from .forms import PostForm
+from django.contrib.auth.models import Group
 
 
 class PostList(ListView):
@@ -12,7 +13,7 @@ class PostList(ListView):
     template_name = 'portal/PostList.html'
     context_object_name = 'PostList'
     ordering = '-date_in'
-    paginate_by = 10
+    paginate_by = 5
 
 
 class PostDetail(DetailView):
@@ -53,6 +54,7 @@ def SearchPostList(request):
     return render(request, 'portal/PostSearch.html', {'filter_list': filters})
 
 
+
 class CategoryPostList(ListView):
     model = Post
     ordering = '-date_in'
@@ -90,3 +92,11 @@ class SubscriptionsList(ListView):
     model = Category
     template_name = 'portal/SubscriptionsList.html'
     context_object_name = 'SubscriptionsList'
+
+
+def userupdate(request):
+    user = request.user
+    group = Group.objects.get(name='autors')
+    group.user_set.add(user)
+    massage = 'Поздравляем теперь вы можете писать статьи!'
+    return render(request, 'portal/userupdate.html', {'massage': massage})

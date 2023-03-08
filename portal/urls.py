@@ -12,4 +12,6 @@ urlpatterns = [
     path('category/<int:pk>/subscribe', views.subscribe, name='subscribe_user'),
     path('category/<int:pk>/is_not_subscribe', views.is_not_subscribe, name='is_not_subscribe'),
     path('subscriptions/', views.SubscriptionsList.as_view(), name='SubscriptionsList'),
+    path('userupdate/', views.userupdate, name='userupdate'),
+
 ]

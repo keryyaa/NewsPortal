@@ -1,4 +1,6 @@
 {% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+{% load custom_tags %}
 
 {% block content %}
     <form method="get">
@@ -6,7 +8,29 @@
         <input type="submit">
     </form>
     <hr>
-    {% for x in filter_list.qs %}
-        {{ x }}
-    {% endfor %}
+{% for post in filter_list.qs %}
+        <article class="article">
+
+    <h3 class="article__title" align="left">
+        <a href="{% url 'PostDetail' pk=post.pk %}">{{ post.title|censor }}</a>
+    </h3>
+    <div align="left" class="category_post_list">
+        <p align="left">категории:
+            {% for category in post.category.all %}
+                <a href="{% url 'CategoryPostList' pk=category.pk%}">{{ category }}</a>
+            {% endfor %}
+        </p>
+    </div>
+    <div class="article__author author-article" align="right">
+        <time class="article__datetime">{{ post.date_in|date:'M d Y' }}</time>
+        <p><a class="author-article__link" href="#">{{ post.author }}</a></p>
+    </div>
+
+    <div class="article__content" align="left">
+        {{ post.text|censor|truncatechars:20 }}
+    </div>
+</article>
+<hr>
+
+{% endfor %}
 {% endblock content %}
