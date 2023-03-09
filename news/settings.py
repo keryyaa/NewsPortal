@@ -171,7 +171,8 @@ LOGIN_REDIRECT_URL = '/news/'
 LOGOUT_REDIRECT_URL = '/news/'
 
 # Добавляем для отправки писем
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Настройки для отправки писем
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
@@ -190,3 +191,10 @@ SITE_URL = 'http://127.0.0.1:8000'
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 # Количество секунд за которое должна выполниться
 APSCHEDULER_RUN_NOW_TIMEOUT = 25
+
+# Настройки celery
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

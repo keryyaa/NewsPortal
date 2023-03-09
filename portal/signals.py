@@ -4,28 +4,29 @@ from django.dispatch import receiver
 from django.template.loader import render_to_string
 from portal.models import PostCategory
 from news.settings import SITE_URL, DEFAULT_FROM_EMAIL
+from .tasks import send_notification
 
-
-def send_notification(preview, pk, title, subscribers):
-    html_context = render_to_string(
-        'email/CreatePostEmail.html',
-        {
-            'text': preview,
-            'link': f'{SITE_URL}/news/{pk}',
-        }
-    )
-
-    msg = EmailMultiAlternatives(
-        subject=title,
-        body='',
-        from_email=DEFAULT_FROM_EMAIL,
-        to=subscribers
-    )
-    msg.attach_alternative(
-        html_context,
-        'text/html',
-    )
-    msg.send()
+# Если делать без celery выглядело бы так ->
+# def send_notification(preview, pk, title, subscribers):
+#     html_context = render_to_string(
+#         'email/CreatePostEmail.html',
+#         {
+#             'text': preview,
+#             'link': f'{SITE_URL}/news/{pk}',
+#         }
+#     )
+#
+#     msg = EmailMultiAlternatives(
+#         subject=title,
+#         body='',
+#         from_email=DEFAULT_FROM_EMAIL,
+#         to=subscribers
+#     )
+#     msg.attach_alternative(
+#         html_context,
+#         'text/html',
+#     )
+#     msg.send()
 
 
 @receiver(m2m_changed, sender=PostCategory)
@@ -38,5 +39,5 @@ def post_save(sender, instance, **kwargs):
 
         subscribers = [user.email for user in subscribers]
 
-        send_notification(instance.preview(), instance.pk, instance.title, subscribers)
+        send_notification.delay(instance.preview(), instance.pk, instance.title, subscribers)
 

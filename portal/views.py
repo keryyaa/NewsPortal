@@ -31,6 +31,7 @@ class PostCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = ('portal.add_post',)
 
 
+
 class PostUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Post
     form_class = PostForm
